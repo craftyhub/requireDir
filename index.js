@@ -14,9 +14,12 @@ delete require.cache[__filename];
 
 module.exports = function requireDir(dir, opts) {
     // default arguments:
-    dir = dir || '.';
-    opts = opts || {};
-
+    dir     = dir || '.';
+    opts    = opts || {};
+    gvars   = gvars || [];
+    
+    var relDir = dir; // Cache the relative path to the directory
+    
     // resolve the path to an absolute one:
     dir = Path.resolve(parentDir, dir);
 
@@ -81,6 +84,11 @@ module.exports = function requireDir(dir, opts) {
                     }
                 }
             } else {
+                
+                if (file === 'package.json') {
+                    continue;
+                }
+                
                 filesMinusDirs[file] = path;
             }
         }
@@ -113,7 +121,7 @@ module.exports = function requireDir(dir, opts) {
                         map[base] = map[file];
                     }
                 } else {
-                    map[base] = require(path);
+                    map[base] = require(path)(gvars);
                     break;
                 }
             }
