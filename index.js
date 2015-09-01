@@ -12,14 +12,14 @@ var parentFile = parent.filename;
 var parentDir = Path.dirname(parentFile);
 delete require.cache[__filename];
 
-module.exports = function requireDir(dir, opts) {
+module.exports = function requireDir(dir, opts, gvars) {
     // default arguments:
     dir     = dir || '.';
     opts    = opts || {};
     gvars   = gvars || [];
-    
+
     var relDir = dir; // Cache the relative path to the directory
-    
+
     // resolve the path to an absolute one:
     dir = Path.resolve(parentDir, dir);
 
@@ -84,11 +84,11 @@ module.exports = function requireDir(dir, opts) {
                     }
                 }
             } else {
-                
-                if (file === 'package.json') {
+
+                if (file === 'package.json' || file === '.DS_Store' || file === 'README.md') {
                     continue;
                 }
-                
+
                 filesMinusDirs[file] = path;
             }
         }
@@ -121,7 +121,9 @@ module.exports = function requireDir(dir, opts) {
                         map[base] = map[file];
                     }
                 } else {
+                    console.log(path);
                     map[base] = require(path)(gvars);
+                    //require(path);
                     break;
                 }
             }
